@@ -20,7 +20,7 @@ import (
 )
 
 // MaxReplicas licensed for OpenFaaS CE is 5/5
-const MaxReplicas = 5
+const MaxReplicas = 20
 
 // MakeReplicaReader reads the amount of replicas for a deployment
 func MakeReplicaReader(defaultNamespace string, lister v1.DeploymentLister) http.HandlerFunc {

@@ -4,7 +4,7 @@ IMG_NAME?=faas-netes
 VERBOSE?=false
 
 TAG?=latest
-OWNER?=openfaas
+OWNER?=xuanson2406
 SERVER?=ghcr.io
 export DOCKER_CLI_EXPERIMENTAL=enabled
 export DOCKER_BUILDKIT=1
@@ -33,9 +33,7 @@ local:
 
 build-docker:
 	docker build \
-	--build-arg GIT_COMMIT=$(GIT_COMMIT) \
-	--build-arg VERSION=$(VERSION) \
-	-t $(SERVER)/$(OWNER)/$(IMG_NAME):$(TAG) .
+	-t $(OWNER)/$(IMG_NAME):$(TAG) .
 
 .PHONY: build-buildx
 build-buildx:
@@ -73,7 +71,7 @@ publish-buildx-all:
 		.
 
 push:
-	docker push $(SERVER)/$(OWNER)/$(IMG_NAME):$(TAG)
+	docker push $(OWNER)/$(IMG_NAME):$(TAG)
 
 charts: verify-charts charts-only
 
