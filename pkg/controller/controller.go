@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -35,6 +36,7 @@ const (
 	faasKind            = "Function"
 	functionPort        = 8080
 	LabelMinReplicas    = "com.openfaas.scale.min"
+	LabelScaleZero      = "com.openfaas.scale.zero"
 	// SuccessSynced is used as part of the Event 'reason' when a Function is synced
 	SuccessSynced = "Synced"
 	// ErrResourceExists is used as part of the Event 'reason' when a Function fails
@@ -407,7 +409,8 @@ func (c *Controller) getSecrets(namespace string, secretNames []string) (map[str
 // the min replicas label, HPA, the OF autoscaler and scaled to zero deployments
 func getReplicas(function *faasv1.Function, deployment *appsv1.Deployment) *int32 {
 	var minReplicas *int32
-
+	ScaleToZero := "false"
+	log.Printf("get replicas of function %s", function.Name)
 	// extract min replicas from label if specified
 	if function != nil && function.Spec.Labels != nil {
 		lb := *function.Spec.Labels
@@ -416,6 +419,9 @@ func getReplicas(function *faasv1.Function, deployment *appsv1.Deployment) *int3
 			if err == nil && r > 0 {
 				minReplicas = int32p(int32(r))
 			}
+		}
+		if value, exists := lb[LabelScaleZero]; exists {
+			ScaleToZero = value
 		}
 	}
 
@@ -428,6 +434,10 @@ func getReplicas(function *faasv1.Function, deployment *appsv1.Deployment) *int3
 	// do not set replicas if min replicas is not set
 	// and current deployment has no replicas count
 	if minReplicas == nil && deploymentReplicas == nil {
+		if ScaleToZero == "true" {
+			log.Printf("function %s scale to zero", function.Name)
+			return int32p(int32(0))
+		}
 		return nil
 	}
 

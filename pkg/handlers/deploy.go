@@ -143,6 +143,11 @@ func makeDeploymentSpec(request types.FunctionDeployment, existingSecrets map[st
 		if min := getMinReplicaCount(*request.Labels); min != nil {
 			initialReplicas = min
 		}
+		if value, exists := (*request.Labels)["com.openfaas.scale.zero"]; exists {
+			if value == "true" {
+				initialReplicas = int32p(int32(0))
+			}
+		}
 		for k, v := range *request.Labels {
 			labels[k] = v
 		}

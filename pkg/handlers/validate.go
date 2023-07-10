@@ -56,14 +56,14 @@ func validateScalingLabels(request *types.FunctionDeployment) error {
 	}
 
 	labels := *request.Labels
-	if v, ok := labels["com.openfaas.scale.zero"]; ok {
-		if v == "true" {
-			return fmt.Errorf("com.openfaas.scale.zero not available for Community Edition")
-		}
-	}
-	if _, ok := labels["com.openfaas.scale.zero-duration"]; ok {
-		return fmt.Errorf("com.openfaas.scale.zero-duration not available for Community Edition")
-	}
+	// if v, ok := labels["com.openfaas.scale.zero"]; ok {
+	// 	if v == "true" {
+	// 		return fmt.Errorf("com.openfaas.scale.zero not available for Community Edition")
+	// 	}
+	// }
+	// if _, ok := labels["com.openfaas.scale.zero-duration"]; ok {
+	// 	return fmt.Errorf("com.openfaas.scale.zero-duration not available for Community Edition")
+	// }
 
 	if _, ok := labels["com.openfaas.scale.target"]; ok {
 		return fmt.Errorf("com.openfaas.scale.target not available for Community Edition")
