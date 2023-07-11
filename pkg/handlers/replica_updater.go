@@ -56,9 +56,10 @@ func MakeReplicaUpdater(defaultNamespace string, clientset *kubernetes.Clientset
 		}
 
 		if req.Replicas == 0 {
-			http.Error(w, "replicas cannot be set to 0 in OpenFaaS CE",
-				http.StatusBadRequest)
-			return
+			// http.Error(w, "replicas cannot be set to 0 in OpenFaaS CE",
+			// 	http.StatusBadRequest)
+			// return
+			log.Printf("function %s want to scale to zero instance !", functionName)
 		}
 
 		options := metav1.GetOptions{
